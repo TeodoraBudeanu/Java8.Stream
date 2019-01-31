@@ -1,5 +1,6 @@
 package ro.siit.teo.Java8;
 
+import ro.siit.teo.Java8.Exceptions.MonthValidationException;
 import ro.siit.teo.Java8.Exceptions.NameValidationException;
 
 import java.io.BufferedReader;
@@ -18,9 +19,16 @@ public class FileProcessor {
 
     private PersonsList persons = new PersonsList();
 
-    public void processInput(String inputFile, int month, String outputFile) throws ParseException, IOException {
+    public void processInput(String inputFile, int month, String outputFile) throws ParseException, IOException, MonthValidationException {
+        validateMonth(month);
         readPersonsFromFile(inputFile);
         writeToFile(month, outputFile);
+    }
+
+    private void validateMonth(int month) throws MonthValidationException {
+        if(month<1 || month>12){
+            throw new MonthValidationException("The month you have entered is not valid. Please check and try again.");
+        }
     }
 
     private void readPersonsFromFile(String inputFile) throws ParseException {
@@ -47,7 +55,7 @@ public class FileProcessor {
     private void writeToFile(int month, String outputFile) throws IOException {
         List<String> lines = persons.selectPersons(month);
         Path file = Paths.get(outputFile);
-        Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+        Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.TRUNCATE_EXISTING);
     }
 
 

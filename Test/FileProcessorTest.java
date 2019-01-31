@@ -1,5 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
+import ro.siit.teo.Java8.Exceptions.MonthValidationException;
 import ro.siit.teo.Java8.FileProcessor;
 import ro.siit.teo.Java8.PersonsList;
 
@@ -23,8 +24,13 @@ public class FileProcessorTest {
         persons = new PersonsList();
     }
 
+    @Test(expected = MonthValidationException.class)
+    public void whenInvalidMonthIsEntered_ThrowsException() throws ParseException, MonthValidationException, IOException {
+        fileProcessor.processInput("./Test/TestResources/input.csv", 15, "./Test/TestResources/output.csv");
+    }
+
     @Test
-    public void whenGivenInputFile_ProcessesAndWritesInOutputFile() throws ParseException, IOException {
+    public void whenGivenInputFile_ProcessesAndWritesInOutputFile() throws ParseException, IOException, MonthValidationException {
         fileProcessor.processInput("./Test/TestResources/input.csv", 4, "./Test/TestResources/output.csv");
         BufferedReader br = new BufferedReader(new FileReader("./Test/TestResources/output.csv"));
         String line = br.readLine();
